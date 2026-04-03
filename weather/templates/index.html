@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Packing Assistant</title>
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --bg-dark: #222f3e;
+            --card-bg: #341f97;
+            --list-bg: #5f27cd;
+            --text-main: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+        }
+
+        .container { width: 100%; max-width: 500px; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--primary); font-size: 36px; margin: 0; }
+        .header p { color: #c8d6e5; margin-top: 5px; }
+
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-box input { flex: 1; padding: 15px; border-radius: 12px; border: none; font-size: 16px; outline: none; }
+        .search-box button { padding: 15px 25px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .search-box button:hover { background: #ee5253; }
+
+        .dashboard { background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        .weather-summary { text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px; }
+        .weather-summary h2 { margin: 0; font-size: 28px; }
+        .weather-summary h1 { margin: 10px 0; font-size: 60px; color: var(--primary); }
+        
+        .packing-list { list-style: none; padding: 0; margin: 0; }
+        .packing-list li { background: var(--list-bg); margin-bottom: 10px; padding: 15px; border-radius: 10px; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+        .packing-list li::before { content: '✓'; color: #1dd1a1; font-weight: bold; }
+        
+        .error { color: #ff9f43; text-align: center; font-weight: bold; }
+        .empty-state { text-align: center; color: rgba(255,255,255,0.5); font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Packing Assistant</h1>
+            <p>Smart packing based on live weather data.</p>
+        </div>
+
+        <form class="search-box" method="POST">
+            <input type="text" name="city" placeholder="Where are you traveling to?" required>
+            <button type="submit">Pack</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <div class="dashboard">
+            {% if weather %}
+                <div class="weather-summary">
+                    <h2>{{ weather.location }}</h2>
+                    <h1>{{ weather.temp }}°C</h1>
+                    <p>{{ weather.description }}</p>
+                </div>
+                
+                <h3>Recommended Packing List:</h3>
+                <ul class="packing-list">
+                    {% for item in items %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">Enter a destination above to get your custom packing list!</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
